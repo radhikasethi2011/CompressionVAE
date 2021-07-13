@@ -54,6 +54,8 @@ class VAEModel(object):
                  input_dim,
                  activation=tf.nn.sigmoid,
                  activation_nf=tf.nn.sigmoid,
+                 activation_dec=tf.nn.relu,
+                 activation_nf_dec=tf.nn.relu,
                  keep_prob=1.0,
                  encode=False,
                  initializer='orthogonal'):
@@ -63,6 +65,8 @@ class VAEModel(object):
         self.batch_size = batch_size
         self.activation = activation
         self.activation_nf = activation_nf
+        self.activation_dec=activation_dec
+        self.activation_nf_dec=activation_nf_dec
         self.encode = encode
         self.cells_enc = self.param['cells_encoder']
         self.layers_enc = len(param['cells_encoder'])
@@ -349,11 +353,11 @@ class VAEModel(object):
 
         for l in range(self.layers_dec):
             # print(decoder_hidden)
-            decoder_hidden = tf.nn.dropout(self.activation(tf.matmul(decoder_hidden,
+            decoder_hidden = tf.nn.dropout(self.activation_dec(tf.matmul(decoder_hidden,
                                                                      self.variables['decoder_stack'][l]['W'])
                                                            + self.variables['decoder_stack'][l]['b']),
                                            keep_prob=self.keep_prob)
-            decoder_hidden = self.activation(decoder_hidden)
+            decoder_hidden = self.activation_dec(decoder_hidden)
 
         # Split into mu and logvar parts
         # decoder_hidden_mu, decoder_hidden_logvar = tf.split(decoder_hidden, num_or_size_splits=2, axis=1)
@@ -383,11 +387,11 @@ class VAEModel(object):
 
         for l in range(self.layers_dec):
             # print(decoder_hidden)
-            decoder_hidden = tf.nn.dropout(self.activation(tf.matmul(decoder_hidden,
+            decoder_hidden = tf.nn.dropout(self.activation_dec(tf.matmul(decoder_hidden,
                                                                      self.variables['decoder_stack'][l]['W'])
                                                            + self.variables['decoder_stack'][l]['b']),
                                            keep_prob=self.keep_prob)
-            decoder_hidden = self.activation(decoder_hidden)
+            decoder_hidden = self.activation_dec(decoder_hidden)
 
         decoder_mu = tf.add(tf.matmul(decoder_hidden, self.variables['decoder_fc']['W_mu']),
                             self.variables['decoder_fc']['b_mu'],
