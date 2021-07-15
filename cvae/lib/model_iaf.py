@@ -52,8 +52,8 @@ class VAEModel(object):
                  param,
                  batch_size,
                  input_dim,
-                 activation=tf.nn.tanh,
-                 activation_nf=tf.nn.tanh,
+                 activation=tf.nn.relu,
+                 activation_nf=tf.nn.relu,
                  keep_prob=1.0,
                  encode=False,
                  initializer='orthogonal'):
